@@ -1,15 +1,75 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <cstring>
+#include <vector>
 using namespace std;
 
-void printArray(int arr[], int n)
+void q2(int n)
 {
-    for (int i = 0; i < n; i++)
+    int x;
+    if (n > 1)
     {
-        cout << arr[i] << " ";
+        x = 2;
     }
-    cout << endl;
+    else
+    {
+        x = 1;
+    }
+    for (int j = 5; j > 0; j += x)
+    {
+        int mid = j / 2, divisor = 0;
+        int temp;
+        bool found = true;
+        for (int i = 1; i <= mid; i++)
+        {
+            if (j % i == 0)
+            {
+                divisor++;
+                if (divisor != 1)
+                {
+                    if (i - temp < n)
+                    {
+                        found = false;
+                    }
+                }
+                temp = i;
+            }
+        }
+        if (j - temp < n)
+        {
+            found = false;
+        }
+        divisor++;
+        if (divisor < 4)
+        {
+            found = false;
+        }
+        if (found == true)
+        {
+            cout << j << endl;
+            break;
+        }
+    }
+}
+
+void q1(int n, string b)
+{
+    string ans = "1";
+    int current = b[0] + 1;
+    for (int i = 1; i < n; i++)
+    {
+        if (current == b[i] + 1)
+        {
+            ans += "0";
+            current = b[i];
+        }
+        else
+        {
+            ans += "1";
+            current = b[i] + 1;
+        }
+    }
+    cout << ans << endl;
 }
 
 int main()
@@ -18,16 +78,9 @@ int main()
     cin >> t;
     for (int x = 0; x < t; x++)
     {
-        int n, i;
+        int n;
         cin >> n;
-        int *arr = new int[n];
-        for (i = 0; i < n; i++)
-        {
-            cin >> arr[i];
-        }
-        rotate(arr, n);
-        printArray(arr, n);
-        delete[] arr;
+        q2(n);
     }
     return 0;
 }
