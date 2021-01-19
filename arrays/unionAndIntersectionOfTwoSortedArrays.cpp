@@ -6,6 +6,14 @@ void printIntersection(int arr1[], int arr2[], int n, int m)
     int i = 0, j = 0;
     while (i < n && j < m)
     {
+        while (arr1[i] == arr1[i + 1])
+        {
+            i++;
+        }
+        while (arr2[j] == arr2[j + 1])
+        {
+            j++;
+        }
         if (arr1[i] < arr2[j])
         {
             i++;
@@ -28,6 +36,14 @@ void printUnion(int arr1[], int arr2[], int n, int m)
     int i = 0, j = 0;
     while (i < n && j < m)
     {
+        while (arr1[i] == arr1[i + 1])
+        {
+            i++;
+        }
+        while (arr2[j] == arr2[j + 1])
+        {
+            j++;
+        }
         if (arr1[i] < arr2[j])
         {
             cout << arr1[i++] << " ";
@@ -55,9 +71,9 @@ void printUnion(int arr1[], int arr2[], int n, int m)
 
 int main()
 {
-    int arr1[5] = {1, 2, 3, 4, 5};
-    int arr2[4] = {2, 7, 3, 8};
-    int n = 5, m = 4;
+    int arr1[6] = {1, 2, 2, 3, 4, 5};
+    int arr2[5] = {2, 2, 3, 7, 8};
+    int n = 6, m = 5;
     printUnion(arr1, arr2, n, m);
     printIntersection(arr1, arr2, n, m);
     return 0;
