@@ -1,11 +1,12 @@
 #include <iostream>
 using namespace std;
 
-void merge(int arr[], int start, int end)
+int merge(int arr[], int start, int end)
 {
     int mergedArray[end - start + 1];
     int mid = (start + end) / 2;
     int i = start, j = mid + 1, k = 0;
+    int inversionCount = 0;
     while (i <= mid && j <= end)
     {
         if (arr[i] <= arr[j])
@@ -15,6 +16,7 @@ void merge(int arr[], int start, int end)
         else
         {
             mergedArray[k++] = arr[j++];
+            inversionCount += mid + 1 - i;
         }
     }
     while (i <= mid)
@@ -29,22 +31,24 @@ void merge(int arr[], int start, int end)
     {
         arr[start + i] = mergedArray[i];
     }
+    return inversionCount;
 }
 
-void mergeSort(int arr[], int n, int start = 0, int end = -1)
+int countInversion(int arr[], int n, int start = 0, int end = -1)
 {
     if (end == -1)
     {
         end = n - 1;
     }
-    if (start >= end)
+    int inversionCount = 0;
+    if (start < end)
     {
-        return;
+        int mid = (start + end) / 2;
+        inversionCount += countInversion(arr, mid - start + 1, start, mid);
+        inversionCount += countInversion(arr, end - mid, mid + 1, end);
+        inversionCount += merge(arr, start, end);
     }
-    int mid = (start + end) / 2;
-    mergeSort(arr, mid - start + 1, start, mid);
-    mergeSort(arr, end - mid, mid + 1, end);
-    merge(arr, start, end);
+    return inversionCount;
 }
 
 int main()
@@ -56,10 +60,7 @@ int main()
     {
         cin >> arr[i];
     }
-    mergeSort(arr, n);
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    int ans = countInversion(arr, n);
+    cout << ans << endl;
     return 0;
 }
