@@ -1,21 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int findParent(int v, vector<int> &parent)
+pair<int, int> findParentByPathCompression(int v, vector<pair<int, int>> &parent)
 {
-    if (parent[v] == v)
+    if (parent[v].first != v)
     {
-        return v;
+        parent[v].first = findParentByPathCompression(parent[v].first, parent).first;
     }
-    return findParent(parent[v], parent);
+    return parent[v];
+}
+
+void unionByRank(vector<pair<int, int>> &parent, pair<int, int> srcParent, pair<int, int> destParent)
+{
+    if (srcParent.second > destParent.second)
+    {
+        parent[destParent.first].first = srcParent.first;
+    }
+    else if (srcParent.second < destParent.second)
+    {
+        parent[srcParent.first].first = destParent.first;
+    }
+    else
+    {
+        parent[srcParent.first].first = destParent.first;
+        parent[destParent.first].second++;
+    }
 }
 
 void kruskals(vector<pair<int, pair<int, int>>> &edges, int v)
 {
-    vector<int> parent(v);
+    vector<pair<int, int>> parent(v);
     for (int i = 0; i < v; i++)
     {
-        parent[i] = i;
+        parent[i].first = i;
+        parent[i].second = 0;
     }
     sort(edges.begin(), edges.end());
     vector<pair<int, pair<int, int>>> output;
@@ -24,13 +42,15 @@ void kruskals(vector<pair<int, pair<int, int>>> &edges, int v)
     while (count != v - 1)
     {
         pair<int, pair<int, int>> currEdge = edges[i];
-        int srcParent = findParent(currEdge.second.first, parent);
-        int destParent = findParent(currEdge.second.second, parent);
-        if (srcParent != destParent)
+        int currEdgeSrc = currEdge.second.first;
+        int currEdgeDest = currEdge.second.second;
+        pair<int, int> srcParent = findParentByPathCompression(currEdgeSrc, parent);
+        pair<int, int> destParent = findParentByPathCompression(currEdgeDest, parent);
+        if (srcParent.first != destParent.first)
         {
             output.push_back(currEdge);
             count++;
-            parent[destParent] = srcParent;
+            unionByRank(parent, srcParent, destParent);
         }
         i++;
     }
