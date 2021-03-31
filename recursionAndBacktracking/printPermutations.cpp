@@ -6,6 +6,7 @@ void printPermutations(string str, string ans)
     if (str.length() == 0)
     {
         cout << ans << endl;
+        return;
     }
     for (int i = 0; i < str.length(); i++)
     {
