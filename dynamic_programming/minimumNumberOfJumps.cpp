@@ -3,31 +3,20 @@ using namespace std;
 
 int minJumps(int arr[], int n)
 {
-    if (arr[0] == 0 || n == 0)
-    {
-        return -1;
-    }
-    vector<int> jumps(n, INT_MAX);
-    jumps[n - 1] = 0;
+    vector<int> dp(n, INT_MAX);
+    dp[n - 1] = 0;
     for (int i = n - 2; i >= 0; i--)
     {
-        for (int j = 1; j <= arr[i] && i + j <= n - 1; j++)
+        for (int j = 1; j <= arr[i] && i + j < n; j++)
         {
-            if (jumps[i + j] != -1)
-            {
-                jumps[i] = min(jumps[i], jumps[i + j]);
-            }
+            dp[i] = min(dp[i], dp[i + j]);
         }
-        if (jumps[i] != INT_MAX)
-        {
-            jumps[i]++;
-        }
-        else
-        {
-            jumps[i] = -1;
-        }
+        if (dp[i] != INT_MAX)
+            dp[i]++;
     }
-    return jumps[0];
+    if (dp[0] == INT_MAX)
+        return -1;
+    return dp[0];
 }
 
 int main()

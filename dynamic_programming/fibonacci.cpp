@@ -18,6 +18,8 @@ int fibMemoization(int n, vector<int> &fibonacci)
 
 int fibTabulation(int n)
 {
+    if (n == 0)
+        return 0;
     vector<int> fibonacci(n + 1, -1);
     fibonacci[0] = 0;
     fibonacci[1] = 1;
