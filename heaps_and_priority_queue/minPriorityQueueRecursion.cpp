@@ -40,6 +40,18 @@ private:
     }
 
 public:
+    PriorityQueue(vector<int> &arr)
+    {
+        for (auto i : arr)
+        {
+            pq.push_back(i);
+        }
+        for (int i = (pq.size() / 2) - 1; i >= 0; i--)
+        {
+            downHeapify(i);
+        }
+    }
+
     bool isEmpty()
     {
         return pq.size() == 0;
@@ -83,11 +95,14 @@ public:
 
 int main()
 {
-    PriorityQueue pq;
-
+    int n;
+    cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+    PriorityQueue pq(arr);
     int choice;
     cin >> choice;
-
     while (choice != -1)
     {
         switch (choice)
