@@ -2,23 +2,28 @@
 using namespace std;
 #define mod 1000000007
 
-int countFriendsPairing(int n)
+int countFriendsPairings(int n)
 {
-    long long int pair[n];
-    pair[0] = 1;
-    pair[1] = 2;
-    for (int i = 2; i < n; i++)
+    // code here
+    long long first = 1, second = 1;
+    for (int i = 2; i <= n; i++)
     {
-        pair[i] = pair[i - 1] % mod + ((i % mod) * (pair[i - 2] % mod)) % mod;
-        pair[i] %= mod;
+        if (i == 2)
+        {
+            second = 2;
+            continue;
+        }
+        long long temp = second;
+        second = (second + ((i - 1) * first) % mod) % mod;
+        first = temp;
     }
-    return pair[n - 1];
+    return second;
 }
 
 int main()
 {
     int n;
     cin >> n;
-    cout << countFriendsPairing(n) << endl;
+    cout << countFriendsPairings(n) << endl;
     return 0;
 }
