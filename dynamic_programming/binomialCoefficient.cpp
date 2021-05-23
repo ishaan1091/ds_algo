@@ -4,20 +4,20 @@ using namespace std;
 
 int nCr(int n, int r)
 {
-    if (r > n)
-        return 0;
-    long long int C[r + 1];
-    memset(C, 0, sizeof(C));
-    C[0] = 1;
+    // code here
+    vector<int> dp(r + 1, 0);
+    dp[0] = 1;
     for (int i = 1; i <= n; i++)
     {
-        for (int j = min(i, r); j > 0; j--)
+        for (int j = (i < r ? i : r); j >= 1; j--)
         {
-            C[j] = C[j] % mod + C[j - 1] % mod;
-            C[j] %= mod;
+            if (j == i)
+                dp[j] = 1;
+            else
+                dp[j] = (dp[j] + dp[j - 1]) % mod;
         }
     }
-    return C[r];
+    return dp[r];
 }
 
 int main()
