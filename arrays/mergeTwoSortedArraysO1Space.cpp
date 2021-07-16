@@ -48,10 +48,10 @@ int nextGap(int gap)
     return (gap / 2) + (gap % 2);
 }
 
-void merge(long long arr1[], long long arr2[], int n, int m)
+void mergeUsingGapMethod(long long arr1[], long long arr2[], int n, int m)
 {
     // code here
-    for (int gap = (n + m) / 2; gap >= 1; gap = nextGap(gap))
+    for (int gap = nextGap(n + m); gap >= 1; gap = nextGap(gap))
     {
         int i = 0, j = gap;
         for (; j < n; i++, j++)
@@ -71,13 +71,12 @@ void merge(long long arr1[], long long arr2[], int n, int m)
         }
     }
 }
-}
 
 int main()
 {
-    int arr1[5] = {1, 3, 4, 9, 10};
-    int arr2[3] = {2, 7, 8};
-    int n = 5, m = 3;
+    long long arr1[2] = {2650, 5032};
+    long long arr2[1] = {1537};
+    int n = 2, m = 1;
     mergeUsingGapMethod(arr1, arr2, n, m);
     for (int i = 0; i < n; i++)
     {

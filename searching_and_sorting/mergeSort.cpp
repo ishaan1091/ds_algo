@@ -1,65 +1,91 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-void merge(int arr[], int start, int end)
+void mergeSortedArrays(vector<int> &arr, int start, int end)
 {
-    int mergedArray[end - start + 1];
-    int mid = (start + end) / 2;
-    int i = start, j = mid + 1, k = 0;
+    int mid = start + (end - start) / 2;
+    int i = start, j = mid + 1;
+    vector<int> output(end - start + 1, 0);
+    int k = 0;
     while (i <= mid && j <= end)
     {
         if (arr[i] <= arr[j])
-        {
-            mergedArray[k++] = arr[i++];
-        }
+            output[k++] = arr[i++];
         else
-        {
-            mergedArray[k++] = arr[j++];
-        }
+            output[k++] = arr[j++];
     }
     while (i <= mid)
-    {
-        mergedArray[k++] = arr[i++];
-    }
+        output[k++] = arr[i++];
     while (j <= end)
+        output[k++] = arr[j++];
+    for (int p = start; p <= end; p++)
     {
-        mergedArray[k++] = arr[j++];
-    }
-    for (int i = 0; i < end - start + 1; i++)
-    {
-        arr[start + i] = mergedArray[i];
+        arr[p] = output[p - start];
     }
 }
 
-void mergeSort(int arr[], int n, int start = 0, int end = -1)
+void mergeSort(vector<int> &arr, int start = 0, int end = INT_MIN)
 {
-    if (end == -1)
-    {
-        end = n - 1;
-    }
+    if (end == INT_MIN)
+        end = arr.size() - 1;
     if (start >= end)
-    {
         return;
+    int mid = start + (end - start) / 2;
+    mergeSort(arr, start, mid);
+    mergeSort(arr, mid + 1, end);
+    mergeSortedArrays(arr, start, end);
+}
+
+int nextGap(int gap)
+{
+    if (gap <= 1)
+        return 0;
+    return (gap / 2) + (gap % 2);
+}
+
+void mergeSortedArraysConstantSpace(vector<int> &arr, int start, int end)
+{
+    for (int gap = nextGap(end - start + 1); gap >= 1; gap = nextGap(gap))
+    {
+        int i = start, j = start + gap;
+        for (; j <= end; i++, j++)
+        {
+            if (arr[i] > arr[j])
+                swap(arr[i], arr[j]);
+        }
     }
-    int mid = (start + end) / 2;
-    mergeSort(arr, mid - start + 1, start, mid);
-    mergeSort(arr, end - mid, mid + 1, end);
-    merge(arr, start, end);
+}
+
+void mergeSortConstantSpace(vector<int> &arr, int start = 0, int end = INT_MIN)
+{
+    if (end == INT_MIN)
+        end = arr.size() - 1;
+    if (start >= end)
+        return;
+    int mid = start + (end - start) / 2;
+    mergeSort(arr, start, mid);
+    mergeSort(arr, mid + 1, end);
+    mergeSortedArraysConstantSpace(arr, start, end);
 }
 
 int main()
 {
     int n;
     cin >> n;
-    int *arr = new int[n];
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
-    {
         cin >> arr[i];
-    }
-    mergeSort(arr, n);
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    vector<int> tempArr = arr;
+    cout << "Merge Sort : ";
+    mergeSort(arr);
+    for (auto i : arr)
+        cout << i << " ";
+    cout << endl;
+    arr = tempArr;
+    cout << "Merge Sort Using Constant Space : ";
+    mergeSortConstantSpace(arr);
+    for (auto i : arr)
+        cout << i << " ";
+    cout << endl;
     return 0;
 }
