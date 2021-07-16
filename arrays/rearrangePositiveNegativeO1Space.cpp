@@ -1,48 +1,45 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-void swap(int &a, int &b)
+void rotate(vector<int> &arr, int start, int end)
 {
-    int temp = a;
-    a = b;
-    b = temp;
+    int temp = arr[end];
+    for (int i = end; i > start; i--)
+    {
+        arr[i] = arr[i - 1];
+    }
+    arr[start] = temp;
 }
 
-void rearrange(int arr[], int n)
+void rearrange(vector<int> &arr)
 {
-    int i = 0, j = 0;
-    while (i < n && j < n)
+    int i = 0, idx = -1;
+    while (i < arr.size())
     {
-        while (arr[i] >= 0)
+        if (idx == -1)
         {
-            i++;
-        }
-        while (arr[j] < 0)
-        {
-            j++;
-        }
-        if (i >= n || j >= n)
-        {
-            break;
-        }
-        int pos = arr[j];
-        int neg = arr[i];
-        for (int k = max(i, j); k > min(i, j) + 1; k--)
-        {
-            arr[k] = arr[k - 1];
-        }
-        arr[min(i, j)] = neg;
-        arr[min(i, j) + 1] = pos;
-        if (min(i, j) == i)
-        {
-            i += 2;
-            j = i;
+            if (i % 2 == 0 && arr[i] >= 0)
+                idx = i;
+            else if (i % 2 != 0 && arr[i] < 0)
+                idx = i;
         }
         else
         {
-            j += 2;
-            i = j;
+            bool posRequired = (idx % 2 != 0);
+            if (arr[i] >= 0 && posRequired)
+            {
+                rotate(arr, idx, i);
+                i = idx;
+                idx = -1;
+            }
+            else if (arr[i] < 0 && !posRequired)
+            {
+                rotate(arr, idx, i);
+                i = idx;
+                idx = -1;
+            }
         }
+        i++;
     }
 }
 
@@ -50,16 +47,12 @@ int main()
 {
     int n;
     cin >> n;
-    int *arr = new int[n];
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
-    {
         cin >> arr[i];
-    }
-    rearrange(arr, n);
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
-    delete[] arr;
+    rearrange(arr);
+    for (auto i : arr)
+        cout << i << " ";
+    cout << endl;
     return 0;
 }

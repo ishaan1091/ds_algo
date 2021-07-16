@@ -38,6 +38,7 @@ void mergeUsingInsertionSortMethod(int arr1[], int arr2[], int n, int m)
     }
 }
 
+// Optimal approach
 int nextGap(int gap)
 {
     if (gap <= 1)
@@ -47,37 +48,29 @@ int nextGap(int gap)
     return (gap / 2) + (gap % 2);
 }
 
-// Optimal approach
-void mergeUsingGapMethod(int arr1[], int arr2[], int n, int m)
+void merge(long long arr1[], long long arr2[], int n, int m)
 {
-    int i, j, gap = n + m;
-    for (gap = nextGap(gap); gap > 0; gap = nextGap(gap))
+    // code here
+    for (int gap = (n + m) / 2; gap >= 1; gap = nextGap(gap))
     {
-        for (i = 0; i + gap < n; i++)
+        int i = 0, j = gap;
+        for (; j < n; i++, j++)
         {
-            if (arr1[i] > arr1[i + gap])
-            {
-                swap(arr1[i], arr1[i + gap]);
-            }
+            if (arr1[i] > arr1[j])
+                swap(arr1[i], arr1[j]);
         }
-        for (j = gap > n ? gap - n : 0; i < n && j < m; i++, j++)
+        for (; i < n && j < n + m; i++, j++)
         {
-            if (arr1[i] > arr2[j])
-            {
-                swap(arr1[i], arr2[j]);
-            }
+            if (arr1[i] > arr2[j - n])
+                swap(arr1[i], arr2[j - n]);
         }
-        if (j < m)
+        for (; i < n + m && j < n + m; i++, j++)
         {
-            for (j = 0; j + gap < m; j++)
-            {
-                if (arr2[j] > arr2[j + gap])
-                {
-                    swap(arr2[j], arr2[j + gap]);
-                }
-            }
+            if (arr2[i - n] > arr2[j - n])
+                swap(arr2[i - n], arr2[j - n]);
         }
     }
+}
 }
 
 int main()
