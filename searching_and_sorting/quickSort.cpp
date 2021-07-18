@@ -1,71 +1,47 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-void swap(int &a, int &b)
+int partition(vector<int> &arr, int start, int end)
 {
-    int temp = a;
-    a = b;
-    b = temp;
-}
-
-int partition(int arr[], int start, int end)
-{
-    int smaller = 0;
-    for (int i = start + 1; i <= end; i++)
+    // random partitioning
+    srand(time(NULL));
+    int random = start + rand() % (end - start);
+    swap(arr[random], arr[start]);
+    int pivot = arr[start], i = start, j = start;
+    while (j <= end)
     {
-        if (arr[i] <= arr[start])
-        {
-            smaller++;
-        }
-    }
-    int i = start, j = end;
-    swap(arr[start], arr[start + smaller]);
-    while (i < start + smaller && j > start + smaller)
-    {
-        while (arr[i] <= arr[start + smaller] && i < start + smaller)
-        {
-            i++;
-        }
-        while (arr[j] > arr[start + smaller] && j > start + smaller)
-        {
-            j--;
-        }
-        if (i < j)
+        if (arr[j] <= pivot)
         {
             swap(arr[i], arr[j]);
+            i++;
         }
+        j++;
     }
-    return start + smaller;
+    swap(arr[start], arr[i - 1]);
+    return i - 1;
 }
 
-void quickSort(int arr[], int n, int start = 0, int end = -1)
+void quickSort(vector<int> &arr, int start = 0, int end = INT_MIN)
 {
-    if (end == -1)
-    {
-        end = n - 1;
-    }
+    if (end == INT_MIN)
+        end = arr.size() - 1;
     if (start >= end)
-    {
         return;
-    }
-    int pivotPos = partition(arr, start, end);
-    quickSort(arr, pivotPos - start, start, pivotPos - 1);
-    quickSort(arr, end - pivotPos, pivotPos + 1, end);
+    int pivot = partition(arr, start, end);
+    quickSort(arr, start, pivot - 1);
+    quickSort(arr, pivot + 1, end);
 }
 
 int main()
 {
     int n;
     cin >> n;
-    int *arr = new int[n];
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
-    {
         cin >> arr[i];
-    }
-    quickSort(arr, n);
-    for (int i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    quickSort(arr);
+    for (auto i : arr)
+        cout << i << " ";
+    cout << endl;
     return 0;
 }
