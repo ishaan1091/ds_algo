@@ -13,4 +13,5 @@ topic_importance = [3, 2, 3, 3, 1, 1, 1, 2, 2, 2, 2, 3, 3, 2]
 
 # Making a random choice for today's keeping in mind the priority of various topics
 todays_topic = random.choices(topics, weights=topic_importance)
-print(todays_topic[0])
+print()
+print("Topic for Today : ", todays_topic[0].upper())
