@@ -103,10 +103,10 @@ Node *kReverse(Node *head, int k)
 
 int main()
 {
-    vector<int> arr1 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    vector<int> arr1 = {1, 2, 3, 4, 5};
     Node *head1 = takeInput(arr1);
     printLL(head1);
-    head1 = kReverse(head1, 4);
+    head1 = kReverse(head1, 3);
     printLL(head1);
     delete head1;
     return 0;
