@@ -76,7 +76,8 @@ void removeLeafNodes(Node *root)
     {
         if (root->children[i]->children.size() == 0)
         {
-            root->children.erase(remove(root->children.begin(), root->children.end(), root->children[i]), root->children.end());
+            auto it = root->children.begin() + i;
+            root->children.erase(it);
             i--;
         }
         else

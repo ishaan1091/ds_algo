@@ -4,13 +4,13 @@ using namespace std;
 class Node
 {
 public:
-    int data;
+    int val;
     Node *left;
     Node *right;
 
-    Node(int data)
+    Node(int val)
     {
-        this->data = data;
+        this->val = val;
         this->left = NULL;
         this->right = NULL;
     }
@@ -27,107 +27,127 @@ class BST
 public:
     Node *root;
 
-    BST()
+    BST(Node *root)
     {
-        root = NULL;
+        this->root = root;
     }
 
     ~BST()
     {
-        delete root;
+        delete this->root;
     }
 
-    bool search(int data)
+    bool search(int val)
     {
-        return hasData(this->root, data);
+        return searchUtil(this->root, val);
     }
 
-    void insert(int data)
+    void insert(int val)
     {
-        this->root = insert(this->root, data);
+        this->root = insertUtil(this->root, val);
     }
 
-    void remove(int data)
+    void remove(int val)
     {
-        this->root = deleteData(this->root, data);
+        this->root = removeUtil(this->root, val);
     }
 
     void print()
     {
-        printTree(this->root);
+        printUtil(this->root);
     }
 
     int size()
     {
-        return size(this->root);
+        return sizeUtil(this->root);
     }
 
     int sum()
     {
-        return sum(this->root);
+        return sumUtil(this->root);
     }
 
     int maxVal()
     {
-        return maxVal(this->root);
+        return maxValUtil(this->root);
     }
 
     int minVal()
     {
-        return minVal(this->root);
+        return minValUtil(this->root);
+    }
+
+    int height()
+    {
+        return heightUtil(this->root);
+    }
+
+    int diameter()
+    {
+        pair<int, int> ans = diameterUtil(this->root);
+        return ans.second;
     }
 
 private:
-    bool hasData(Node *root, int data)
+    bool searchUtil(Node *root, int val)
     {
         if (root == NULL)
             return false;
-        return (root->data == data) || hasData(root->left, data) || hasData(root->right, data);
+        if (root->val == val)
+            return true;
+        else if (root->val < val)
+            return searchUtil(root->right, val);
+        else
+            return searchUtil(root->left, val);
     }
 
-    Node *insert(Node *root, int data)
+    Node *insertUtil(Node *root, int val)
     {
         if (root == NULL)
         {
-            Node *newNode = new Node(data);
+            Node *newNode = new Node(val);
             return newNode;
         }
-        if (data <= root->data)
-            root->left = insert(root->left, data);
-        if (data > root->data)
-            root->right = insert(root->right, data);
-        return root;
-    }
-
-    Node *deleteData(Node *root, int data)
-    {
-        if (root == NULL)
-            return NULL;
-        if (data < root->data)
+        if (root->val >= val)
         {
-            root->left = deleteData(root->left, data);
-        }
-        else if (data > root->data)
-        {
-            root->right = deleteData(root->right, data);
+            root->left = insertUtil(root->left, val);
         }
         else
         {
-            if (root->left != NULL && root->right != NULL)
+            root->right = insertUtil(root->right, val);
+        }
+        return root;
+    }
+
+    Node *removeUtil(Node *root, int val)
+    {
+        if (root == NULL)
+            return NULL;
+        if (root->val > val)
+        {
+            root->left = removeUtil(root->left, val);
+        }
+        else if (root->val < val)
+        {
+            root->right = removeUtil(root->right, val);
+        }
+        else
+        {
+            if (root->left && root->right)
             {
-                int leftMax = maxVal(root->left);
-                root->data = leftMax;
-                root->left = deleteData(root->left, leftMax);
+                int leftMax = maxValUtil(root->left);
+                root->val = leftMax;
+                root->left = removeUtil(root->left, leftMax);
                 return root;
             }
-            else if (root->left != NULL)
+            else if (root->left)
             {
                 Node *temp = root->left;
                 root->left = NULL;
                 delete root;
                 return temp;
             }
-            else if (root->right != NULL)
+            else if (root->right)
             {
                 Node *temp = root->right;
                 root->right = NULL;
@@ -143,56 +163,88 @@ private:
         return root;
     }
 
-    void printTree(Node *root)
+    void printUtil(Node *root)
     {
         if (root == NULL)
             return;
-        cout << root->data << ":";
         if (root->left)
-            cout << "L:" << root->left->data << ",";
+        {
+            cout << root->left->val << " ";
+        }
+        else
+        {
+            cout << ". ";
+        }
+        cout << root->val << " ";
         if (root->right)
-            cout << "R:" << root->right->data;
-        cout << endl;
-        printTree(root->left);
-        printTree(root->right);
-    }
-
-    int size(Node *root)
-    {
-        if (root == NULL)
-            return 0;
-        return size(root->left) + size(root->right) + 1;
-    }
-
-    int sum(Node *root)
-    {
-        if (root == NULL)
-            return 0;
-        return sum(root->left) + sum(root->right) + root->data;
-    }
-
-    int maxVal(Node *root)
-    {
-        if (root->right != NULL)
         {
-            return maxVal(root->right);
+            cout << root->right->val << endl;
         }
         else
         {
-            return root->data;
+            cout << "." << endl;
         }
+        printUtil(root->left);
+        printUtil(root->right);
     }
 
-    int minVal(Node *root)
+    int sizeUtil(Node *root)
     {
-        if (root->left != NULL)
-        {
-            return minVal(root->left);
-        }
-        else
-        {
-            return root->data;
-        }
+        if (root == NULL)
+            return 0;
+        int ans = 1;
+        ans += sizeUtil(root->left);
+        ans += sizeUtil(root->right);
+        return ans;
+    }
+
+    int sumUtil(Node *root)
+    {
+        if (root == NULL)
+            return 0;
+        int ans = root->val;
+        ans += sumUtil(root->left);
+        ans += sumUtil(root->right);
+        return ans;
+    }
+
+    int maxValUtil(Node *root)
+    {
+        if (root == NULL)
+            return INT_MIN;
+        int ans = root->val;
+        ans = max(ans, maxValUtil(root->right));
+        return ans;
+    }
+
+    int minValUtil(Node *root)
+    {
+        if (root == NULL)
+            return INT_MAX;
+        int ans = root->val;
+        ans = min(ans, minValUtil(root->left));
+        return ans;
+    }
+
+    int heightUtil(Node *root)
+    {
+        if (root == NULL)
+            return 0;
+        int ans = 1;
+        ans = max(ans, heightUtil(root->left) + 1);
+        ans = max(ans, heightUtil(root->right) + 1);
+        return ans;
+    }
+
+    pair<int, int> diameterUtil(Node *root)
+    {
+        if (root == NULL)
+            return {0, 0};
+        pair<int, int> lp = diameterUtil(root->left);
+        pair<int, int> rp = diameterUtil(root->right);
+        int ht = max(lp.first, rp.first) + 1;
+        int dia = max(lp.second, max(rp.second, lp.first + rp.first));
+        return {ht, dia};
     }
 };
 
@@ -240,7 +292,7 @@ void levelorderLinewise(Node *root)
             cout << endl;
             level = front.second;
         }
-        cout << front.first->data << " ";
+        cout << front.first->val << " ";
         if (front.first->left)
             q.push(make_pair(front.first->left, front.second + 1));
         if (front.first->right)
@@ -253,12 +305,13 @@ int main()
 {
     vector<int> arr1 = {50, 25, 75, 12, 37, 62, 87, -1, -1, 30, -1, -1, 70};
     Node *root1 = takeInput(arr1);
-    BST *tree = new BST();
-    tree->root = root1;
+    BST *tree = new BST(root1);
     cout << "SIZE: " << tree->size() << endl;
     cout << "SUM: " << tree->sum() << endl;
     cout << "MAX ELEMENT: " << tree->maxVal() << endl;
     cout << "MIN ELEMENT: " << tree->minVal() << endl;
+    cout << "HEIGHT: " << tree->height() << endl;
+    cout << "DIAMETER: " << tree->diameter() << endl;
     tree->insert(40);
     cout << "CHECKING FOR 40: " << (tree->search(40) ? "YES" : "NO") << endl;
     tree->insert(60);
