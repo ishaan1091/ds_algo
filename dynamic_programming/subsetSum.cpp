@@ -3,6 +3,8 @@ using namespace std;
 
 bool subsetSum(vector<int> &arr, int target)
 {
+    if (target == 0)
+        return 0;
     int n = arr.size();
     vector<vector<bool>> dp(n + 1, vector<bool>(target + 1));
     for (int i = 0; i < n + 1; i++)

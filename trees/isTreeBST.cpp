@@ -5,20 +5,21 @@ class BSTPair
 {
 public:
     bool isBST;
-    int min;
-    int max;
+    int minVal;
+    int maxVal;
+    bool isNull;
 };
 
 class Node
 {
 public:
-    int data;
+    int val;
     Node *left;
     Node *right;
 
-    Node(int data)
+    Node(int val)
     {
-        this->data = data;
+        this->val = val;
         this->left = NULL;
         this->right = NULL;
     }
@@ -36,16 +37,16 @@ void display(Node *root)
         return;
     if (root->left)
     {
-        cout << root->left->data << " - ";
+        cout << root->left->val << " - ";
     }
     else
     {
         cout << ". - ";
     }
-    cout << root->data << " - ";
+    cout << root->val << " - ";
     if (root->right)
     {
-        cout << root->right->data << endl;
+        cout << root->right->val << endl;
     }
     else
     {
@@ -99,7 +100,7 @@ void levelorderLinewise(Node *root)
             cout << endl;
             level = front.second;
         }
-        cout << front.first->data << " ";
+        cout << front.first->val << " ";
         if (front.first->left)
             q.push(make_pair(front.first->left, front.second + 1));
         if (front.first->right)
@@ -114,14 +115,16 @@ BSTPair isTreeBST(Node *root)
     {
         BSTPair p;
         p.isBST = true;
-        p.min = INT_MAX;
-        p.max = INT_MIN;
+        p.minVal = INT_MAX;
+        p.maxVal = INT_MIN;
+        p.isNull = true;
         return p;
     }
     BSTPair lp = isTreeBST(root->left);
     BSTPair rp = isTreeBST(root->right);
     BSTPair p;
-    if (root->data >= lp.max && root->data <= rp.min && lp.isBST && rp.isBST)
+    p.isNull = false;
+    if (lp.isBST && rp.isBST && (rp.isNull || root->val < rp.minVal) && (lp.isNull || root->val > lp.maxVal))
     {
         p.isBST = true;
     }
@@ -129,8 +132,8 @@ BSTPair isTreeBST(Node *root)
     {
         p.isBST = false;
     }
-    p.min = min(root->data, min(lp.min, rp.min));
-    p.max = max(root->data, max(lp.max, rp.max));
+    p.maxVal = max(lp.maxVal, max(root->val, rp.maxVal));
+    p.minVal = min(lp.minVal, min(root->val, rp.minVal));
     return p;
 }
 

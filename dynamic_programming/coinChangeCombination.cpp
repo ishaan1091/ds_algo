@@ -3,6 +3,8 @@ using namespace std;
 
 int coinChangeCombination(vector<int> &arr, int amount)
 {
+    if (amount == 0)
+        return 0;
     int n = arr.size();
     vector<int> dp(amount + 1, 0);
     dp[0] = 1;
