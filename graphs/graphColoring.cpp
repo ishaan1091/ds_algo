@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Note to myself :
 // This is the best solution and I've done my due diligence so next time I am revising this do
 // not doubt myself or satisfy yourself and waste 3 fuckin hours of your life only to realise I was right.
 
